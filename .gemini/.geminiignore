@@ -1,0 +1,18 @@
+# Dependências
+node_modules/
+/vendor/
+venv/
+
+# Arquivos de Build
+/dist/
+/build/
+.next/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Arquivos de ambiente
+.env
+.env.*
+!.env.example
