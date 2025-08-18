@@ -1,7 +1,14 @@
 import knex, { Knex } from 'knex';
 import { SqsPayload } from '../types/sqs-payload';
 
-let connection: Knex | null = null;
+export let connection: Knex | null = null;
+
+export const closeConnection = async (): Promise<void> => {
+  if (connection) {
+    await connection.destroy();
+    connection = null;
+  }
+};
 
 const getConnection = (): Knex => {
   if (connection) {
@@ -39,9 +46,9 @@ export const getBoletoData = async (
 ): Promise<{ linhaDigitavel: string; valor: number } | null> => {
   const db = getConnection();
   const result = await db('acordos as a')
-    .join('acordos_parcelas as ap', 'a.id_acordo', 'ap.id_acordo')
+    .join('acordos_parcelas as ap', 'a.cid_acordo', 'ap.cid_acordo')
     .join('parcelas_boletos as pb', 'ap.id_parcela', 'pb.id_parcela')
-    .join('boletos as b', 'pb.id_boleto', 'b.id_boleto')
+    .join('boletos as b', 'pb.cid_boleto', 'b.cid_boleto')
     .select('b.linha_digitavel_boleto as linhaDigitavel', 'b.valor_pagamento_boleto as valor')
     .where('a.cid_acordo', payload.cid_acordo)
     .andWhere('ap.id_parcela', payload.id_parcela)
@@ -49,4 +56,12 @@ export const getBoletoData = async (
     .first();
 
   return result || null;
+};
+
+export const updateParcelStatus = async (
+  id_parcela: number,
+  status: string
+): Promise<void> => {
+  const db = getConnection();
+  await db('parcelas').where({ id_parcela }).update({ status });
 };

@@ -5,6 +5,7 @@
   "main": "dist/handlers/process-boleto-payment.js",
   "scripts": {
     "test": "jest",
+    "test:integration": "jest --config jest.config.integration.js",
     "build": "tsc"
   },
   "keywords": [
@@ -27,6 +28,7 @@
     "@types/aws-lambda": "^8.10.138",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.12",
+    "aws-sdk": "^2.1692.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.5"
